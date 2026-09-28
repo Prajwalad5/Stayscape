@@ -18,6 +18,9 @@ import {
   LayoutDashboard,
   Shield,
   Plus,
+  Calendar,
+  Star,
+  BarChart3
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useCurrentUser, useIsHost, useIsAdmin } from '@/hooks/use-session';
@@ -88,6 +91,7 @@ export function Navbar() {
               <Button
                 variant="outline"
                 className="flex items-center gap-2 rounded-full px-2 py-1 h-auto"
+                aria-label="User menu"
               >
                 <Menu className="h-4 w-4" />
                 <Avatar className="h-7 w-7">
@@ -141,13 +145,47 @@ export function Navbar() {
                           {isHostDashboard ? 'Switch to traveling' : 'Switch to hosting'}
                         </Link>
                       </DropdownMenuItem>
+                      
                       {isHostDashboard && (
-                        <DropdownMenuItem asChild>
-                          <Link href="/host/listings/new" className="cursor-pointer">
-                            <Plus className="mr-2 h-4 w-4" /> Create listing
-                          </Link>
-                        </DropdownMenuItem>
+                        <>
+                          <DropdownMenuItem asChild>
+                            <Link href="/host/dashboard" className="cursor-pointer">
+                              <Building2 className="mr-2 h-4 w-4" /> Dashboard
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/host/reservations" className="cursor-pointer">
+                              <CalendarDays className="mr-2 h-4 w-4" /> Rentals
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/host/calendar" className="cursor-pointer">
+                              <Calendar className="mr-2 h-4 w-4" /> Calendar
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/messages" className="cursor-pointer">
+                              <MessageSquare className="mr-2 h-4 w-4" /> Messages
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/host/reviews" className="cursor-pointer">
+                              <Star className="mr-2 h-4 w-4" /> Reviews
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/host/analytics" className="cursor-pointer">
+                              <BarChart3 className="mr-2 h-4 w-4" /> Analytics
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/host/listings/new" className="cursor-pointer">
+                              <Plus className="mr-2 h-4 w-4" /> Create listing
+                            </Link>
+                          </DropdownMenuItem>
+                        </>
                       )}
+
                       <DropdownMenuSeparator />
                     </>
                   )}
@@ -166,7 +204,7 @@ export function Navbar() {
                   {isAdmin && (
                     <>
                       <DropdownMenuItem asChild>
-                        <Link href="/admin" className="cursor-pointer">
+                        <Link href="/admin-portal" className="cursor-pointer">
                           <Shield className="mr-2 h-4 w-4" /> Admin Dashboard
                         </Link>
                       </DropdownMenuItem>

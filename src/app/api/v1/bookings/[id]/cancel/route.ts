@@ -47,7 +47,7 @@ export async function POST(
       );
     }
     
-    if (!['PENDING_PAYMENT', 'CONFIRMED'].includes(booking.bookingStatus)) {
+    if (!['PENDING_PAYMENT', 'CONFIRMED', 'REQUESTED', 'PENDING', 'PENDING_APPROVAL'].includes(booking.bookingStatus)) {
       return NextResponse.json(
         { success: false, error: { code: 'INVALID_STATE', message: 'Booking cannot be cancelled from current state' } },
         { status: 400 }

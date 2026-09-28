@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
@@ -31,7 +32,7 @@ interface PropertyPageProps {
   params: { id: string };
 }
 
-async function getProperty(id: string) {
+const getProperty = cache(async (id: string) => {
   try {
     return await prisma.property.findUnique({
       where: { id, status: 'PUBLISHED', deletedAt: null },
@@ -51,7 +52,7 @@ async function getProperty(id: string) {
   } catch {
     return null;
   }
-}
+});
 
 export async function generateMetadata({ params }: PropertyPageProps): Promise<Metadata> {
   const property = await getProperty(params.id);
@@ -75,7 +76,41 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   const session = await auth();
   const cancellationInfo = CANCELLATION_POLICIES.find(p => p.value === property.cancellationPolicy);
 
+  
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Accommodation',
+    name: property.title,
+    description: property.description.substring(0, 160),
+    image: property.images.map(img => img.url),
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: property.city,
+      addressRegion: property.state || '',
+      addressCountry: property.country,
+      postalCode: property.postalCode || '',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: property.latitude,
+      longitude: property.longitude,
+    },
+    aggregateRating: property.reviewCount > 0 ? {
+      '@type': 'AggregateRating',
+      ratingValue: property.averageRating,
+      reviewCount: property.reviewCount,
+    } : undefined,
+    offers: {
+      '@type': 'Offer',
+      price: property.pricePerNight / 100,
+      priceCurrency: 'NPR',
+      availability: 'https://schema.org/InStock'
+    }
+  };
+
   return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     <div className="container mx-auto px-4 py-6">
       {/* Title Section */}
       <div className="mb-4">
@@ -258,7 +293,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
           {/* Location Map */}
           <div>
-            <h3 className="mb-3 text-lg font-semibold">Where you'll be</h3>
+            <h3 className="mb-3 text-lg font-semibold">Where you&apos;ll be</h3>
             <p className="text-muted-foreground mb-4">{property.city}, {property.country}</p>
             <PropertyMap
               lat={property.latitude}
@@ -289,5 +324,6 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }

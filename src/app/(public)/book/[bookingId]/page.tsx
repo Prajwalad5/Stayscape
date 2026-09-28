@@ -28,7 +28,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
     where: { 
       id: bookingId,
       guestId: userId, 
-      bookingStatus: 'PENDING_PAYMENT' 
+      bookingStatus: 'PAYMENT_PENDING' 
     },
     include: {
       property: {
@@ -56,3 +56,4 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
     </div>
   );
 }
+

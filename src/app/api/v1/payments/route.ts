@@ -61,7 +61,17 @@ export async function POST(request: NextRequest) {
     }
     const userId = (session.user as any).id;
 
-    const body = await request.json();
+    let body;
+
+    try {
+
+      body = await request.json();
+
+    } catch (e) {
+
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+
+    }
     const validated = paymentSchema.safeParse(body);
     if (!validated.success) {
       return NextResponse.json(
@@ -94,7 +104,7 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    if (booking.bookingStatus !== 'PENDING_PAYMENT') {
+    if (booking.bookingStatus !== 'PAYMENT_PENDING') {
       return NextResponse.json(
         { success: false, error: { code: 'INVALID_STATE', message: 'Booking is not pending payment' } },
         { status: 400 }

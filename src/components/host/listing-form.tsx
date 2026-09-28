@@ -361,6 +361,7 @@ export function ListingForm({ initialData, mode = 'create' }: { initialData?: an
                 <SelectTrigger><SelectValue placeholder="Currency" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="USD">USD ($)</SelectItem>
+                  <SelectItem value="NPR">NPR (?)</SelectItem>
                   <SelectItem value="NPR">NPR (??)</SelectItem>
                   <SelectItem value="EUR">EUR (�)</SelectItem>
                 </SelectContent>

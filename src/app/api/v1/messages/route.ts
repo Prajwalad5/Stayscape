@@ -1,3 +1,4 @@
+import { sanitizeHtml } from '@/lib/security';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
@@ -61,8 +62,20 @@ export async function POST(request: NextRequest) {
     }
     const userId = (session.user as any).id;
 
-    const body = await request.json();
+    let body;
+
+    try {
+
+      body = await request.json();
+
+    } catch (e) {
+
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+
+    }
+    
     const { participantId, listingId, bookingId, message } = body;
+    const safeMessage = sanitizeHtml(message);
 
     if (!participantId || !message) {
       return NextResponse.json(
@@ -87,7 +100,7 @@ export async function POST(request: NextRequest) {
       // Just create message
       const newMessage = await prisma.message.create({
         data: {
-          content: message,
+          content: safeMessage,
           conversationId: existing.id,
           senderId: userId,
         }
@@ -112,7 +125,7 @@ export async function POST(request: NextRequest) {
         },
         messages: {
           create: {
-            content: message,
+            content: safeMessage,
             senderId: userId,
           }
         }
@@ -131,3 +144,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

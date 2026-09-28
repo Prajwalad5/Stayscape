@@ -92,7 +92,7 @@ export function BookingCard({
       const total = subtotal + cleaningFee + serviceFee + securityDeposit;
       return { isRental: false, subtotal, cleaningFee, serviceFee, securityDeposit, total, duration, baseRate, durationLabel };
     }
-  }, [isRental, nights, startDate, durationMonths, property]);
+  }, [isRental, nights, durationMonths, property]);
 
   const handleBook = async () => {
     if (!isAuthenticated) {

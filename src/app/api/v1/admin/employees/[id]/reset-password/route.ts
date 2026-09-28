@@ -22,7 +22,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const session = await auth();
     const sessionUser = session?.user as any;
 
-    if (!sessionUser || sessionUser.role !== 'ADMIN') {
+    if (!sessionUser || (sessionUser.role !== 'ADMIN' && !sessionUser.adminRole)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

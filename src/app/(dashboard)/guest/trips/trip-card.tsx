@@ -83,7 +83,7 @@ export function TripCard({ booking }: TripCardProps) {
             <Button variant="outline" className="w-full">Message Host</Button>
           </Link>
         )}
-        {['PENDING', 'PENDING_PAYMENT', 'CONFIRMED'].includes(booking.bookingStatus) && (
+        {['PENDING', 'PAYMENT_PENDING', 'CONFIRMED'].includes(booking.bookingStatus) && (
           <CancelBookingButton bookingId={booking.id} />
         )}
       </div>

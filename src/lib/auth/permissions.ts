@@ -138,7 +138,9 @@ export const ROLE_PERMISSIONS: Record<string, string[]> = {
 };
 
 export function hasPermission(user: any, permission: string): boolean {
-  if (!user || !user.adminRole) return false;
+  if (!user) return false;
+  if (user.role === 'ADMIN' && !user.adminRole) return true; // Legacy ADMIN
+  if (!user.adminRole) return false;
   
   // Super admin has all permissions
   if (user.adminRole === ADMIN_ROLES.SUPER_ADMIN) return true;
@@ -168,7 +170,7 @@ export function hasAllPermissions(user: any, permissions: string[]): boolean {
 }
 
 export function isAdmin(user: any): boolean {
-  return !!user?.adminRole;
+  return user?.role === 'ADMIN' || !!user?.adminRole;
 }
 
 export function isHostOrAdmin(user: any): boolean {

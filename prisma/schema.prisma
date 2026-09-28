@@ -3,8 +3,57 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+
+enum UserRoleEnum {
+  USER
+  GUEST
+  HOST
+  SUPPORT
+  MODERATOR
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum PropertyStatusEnum {
+  DRAFT
+  PENDING
+  PUBLISHED
+  UNPUBLISHED
+  APPROVED
+  REJECTED
+  ACTIVE
+  INACTIVE
+}
+
+enum BookingStatusEnum {
+  PENDING
+  PENDING_PAYMENT
+  APPROVED
+  PAYMENT_SUCCESS
+  REQUESTED
+  PENDING_APPROVAL
+  PAYMENT_PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  REJECTED
+  CONFLICTED
+}
+
+enum PaymentStatusEnum {
+  COMPLETED
+  CREATED
+  PENDING
+  PAID
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  CANCELLED
 }
 
 model Account {
@@ -57,7 +106,7 @@ model User {
   encryptedBio            String?
   image                   String?
   passwordHash            String?
-  role                    String                    @default("USER")
+  role UserRoleEnum @default(USER)
   isHost                  Boolean                   @default(false)
   bio                     String?
   phone                   String?                   @unique
@@ -198,7 +247,7 @@ model Property {
   description            String
   propertyType           String
   roomType               String                   @default("ENTIRE_PLACE")
-  status                 String                   @default("DRAFT")
+  status PropertyStatusEnum @default(DRAFT)
   address                String
   city                   String
   state                  String?
@@ -411,8 +460,8 @@ model Booking {
   parkingCharge          Int?
   otherCharges           Json?
   durationMonths         Int?
-  bookingStatus          String                 @default("REQUESTED")
-  paymentStatus          String                 @default("CREATED")
+  bookingStatus BookingStatusEnum @default(REQUESTED)
+  paymentStatus PaymentStatusEnum @default(CREATED)
   paymentProvider        String?
   paymentMethod          String?
   providerPaymentId     String?        @unique
@@ -486,7 +535,7 @@ model Payment {
   idempotencyKey        String?        @unique
   amount                Int
   currency              String         @default("usd")
-  status                String         @default("CREATED")
+  status PaymentStatusEnum @default(CREATED)
   platformFeeAmount     Int
   hostPayoutAmount      Int
   processingFee         Int            @default(0)
@@ -1101,7 +1150,7 @@ model Advertisement {
   targetUrl      String
   placement      String
   targetAudience String
-  status         String    @default("DRAFT")
+  status PropertyStatusEnum @default(DRAFT)
   startDate      DateTime?
   endDate        DateTime?
   dailyBudget    Int?
@@ -1115,3 +1164,5 @@ model Advertisement {
   @@index([status])
   @@index([placement])
 }
+
+

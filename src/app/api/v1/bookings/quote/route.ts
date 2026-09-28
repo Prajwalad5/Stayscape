@@ -20,7 +20,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    let body;
+
+    try {
+
+      body = await request.json();
+
+    } catch (e) {
+
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+
+    }
     const validated = quoteSchema.safeParse(body);
     if (!validated.success) {
       return NextResponse.json(
@@ -58,7 +68,7 @@ export async function POST(request: NextRequest) {
     const overlapping = await prisma.booking.findFirst({
       where: {
         propertyId: listingId,
-        bookingStatus: { in: ['PENDING_PAYMENT', 'CONFIRMED'] },
+        bookingStatus: { in: ['PAYMENT_PENDING', 'CONFIRMED'] },
         AND: [
           { checkIn: { lt: checkOutDate } },
           { checkOut: { gt: checkInDate } }

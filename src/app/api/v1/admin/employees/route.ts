@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const session = await auth();
     const sessionUser = session?.user as any;
     
-    if (!sessionUser || sessionUser.role !== 'ADMIN') {
+    if (!sessionUser || (sessionUser.role !== 'ADMIN' && !sessionUser.adminRole)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     const session = await auth();
     const sessionUser = session?.user as any;
     
-    if (!sessionUser || sessionUser.role !== 'ADMIN') {
+    if (!sessionUser || (sessionUser.role !== 'ADMIN' && !sessionUser.adminRole)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -90,7 +90,17 @@ export async function POST(request: NextRequest) {
     }
     const user = freshUser;
 
-    const body = await request.json();
+    let body;
+
+    try {
+
+      body = await request.json();
+
+    } catch (e) {
+
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+
+    }
     const validated = createEmployeeSchema.safeParse(body);
 
     if (!validated.success) {

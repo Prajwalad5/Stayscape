@@ -27,7 +27,7 @@ const HOST_NAV_ITEMS = [
   { href: '/host/reservations', icon: BookOpen, label: 'Rentals' },
   { href: '/host/earnings', icon: DollarSign, label: 'Earnings' },
   { href: '/host/reviews', icon: Star, label: 'Reviews' },
-  { href: '/host/messages', icon: MessageSquare, label: 'Messages' },
+  { href: '/messages', icon: MessageSquare, label: 'Messages' },
   { href: '/host/analytics', icon: BarChart3, label: 'Analytics' },
   { href: '/host/settings', icon: Settings, label: 'Settings' },
 ];
@@ -83,10 +83,10 @@ export function HostSidebar() {
         <Separator className="my-4" />
 
         <Link
-          href="/"
+          href="/guest/trips"
           className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" /> Back to traveling
+          <ArrowLeft className="h-4 w-4" /> Guest Dashboard
         </Link>
       </ScrollArea>
     </aside>

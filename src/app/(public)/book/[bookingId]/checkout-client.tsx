@@ -38,7 +38,7 @@ export function CheckoutClient({ booking, methods }: { booking: any, methods: an
 
       const initData = await initRes.json();
       
-      // If it's a demo, we simulate success
+      // If it&apos;s a demo, we simulate success
       if (selectedMethod === 'demo') {
         setTimeout(async () => {
           // 2. Verify payment
@@ -131,7 +131,7 @@ export function CheckoutClient({ booking, methods }: { booking: any, methods: an
             <div>
               <p className="font-semibold">Cancellation policy</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Review the host's cancellation policy before booking.
+                Review the host&apos;s cancellation policy before booking.
               </p>
             </div>
           </div>
@@ -233,7 +233,7 @@ export function CheckoutClient({ booking, methods }: { booking: any, methods: an
             <Separator />
             
             <div className="flex justify-between items-center font-bold text-lg">
-              <span>Total (USD)</span>
+              <span>Total ({booking.currency?.toUpperCase() || 'NPR'})</span>
               <span>{formatCurrency(booking.totalPrice / 100, booking.currency)}</span>
             </div>
           </CardContent>

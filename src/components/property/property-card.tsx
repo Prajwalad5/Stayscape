@@ -128,3 +128,4 @@ export function PropertyCard({ property, onFavoriteToggle }: PropertyCardProps) 
     </Link>
   );
 }
+

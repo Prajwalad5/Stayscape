@@ -11,6 +11,8 @@ export const resetPasswordSchema = z.object({
 }).refine((d) => d.password === d.confirmPassword, { message: 'Passwords do not match', path: ['confirmPassword'] });
 
 export const updateProfileSchema = z.object({
+  name: z.string().max(100).optional(),
+  image: z.string().url().optional(),
   firstName: z.string().max(50).optional(),
   lastName: z.string().max(50).optional(),
   bio: z.string().max(500).optional(),
@@ -71,15 +73,15 @@ export const cancellationPolicySchema = z.object({
 // ===== Phase 3: Bookings =====
 export const createBookingSchemaV1 = z.object({
   listingId: z.string().min(1),
-  checkIn: z.coerce.date(),
-  checkOut: z.coerce.date(),
+  checkIn: z.coerce.date().optional(),
+  checkOut: z.coerce.date().optional(),
   guests: z.number().int().min(1).optional(),
   adults: z.number().int().min(1).default(1),
   children: z.number().int().min(0).default(0),
   infants: z.number().int().min(0).default(0),
   pets: z.number().int().min(0).default(0),
   specialRequests: z.string().max(1000).optional(),
-}).refine((d) => d.checkOut > d.checkIn, { message: 'Check-out must be after check-in', path: ['checkOut'] });
+}).refine((d) => (!d.checkOut || !d.checkIn) || d.checkOut > d.checkIn, { message: 'Check-out must be after check-in', path: ['checkOut'] });
 
 export const cancelBookingSchemaV1 = z.object({
   reason: z.string().min(1).max(500),
@@ -87,8 +89,8 @@ export const cancelBookingSchemaV1 = z.object({
 
 export const bookingQuoteSchema = z.object({
   listingId: z.string().min(1),
-  checkIn: z.coerce.date(),
-  checkOut: z.coerce.date(),
+  checkIn: z.coerce.date().optional(),
+  checkOut: z.coerce.date().optional(),
   guests: z.number().int().min(1).optional(),
 });
 

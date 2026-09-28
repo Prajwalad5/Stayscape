@@ -641,7 +641,7 @@ async function main() {
     const data = propertiesData[i];
     const property = await prisma.property.create({
       data: {
-        ...data,
+        ...(data as any),
         publishedAt: data.status === 'PUBLISHED' ? new Date() : null,
         location: {
           create: {
@@ -781,8 +781,9 @@ async function main() {
       data: {
         ...validData,
         bookingNumber: `AB-${now.getFullYear()}-${String(100000 + i).padStart(6, '0')}`,
-        bookingStatus: status,
-        paymentStatus: status === 'COMPLETED' || status === 'CONFIRMED' ? 'SUCCEEDED' : 'CANCELLED',
+        bookingStatus: status as any,
+        paymentStatus: (status === 'COMPLETED' || status === 'CONFIRMED' ? 'SUCCEEDED' : 'CANCELLED') as any,
+
         bookingGuests: {
           create: [
             { guestType: 'adult', count: data.guestCount }
@@ -966,3 +967,5 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+
+

@@ -11,7 +11,7 @@ export function HostPublishButton({ propertyId }: { propertyId: string }) {
   const router = useRouter();
 
   const handlePublishAndPay = async () => {
-    if (!confirm('Publishing requires a one-time listing commission fee of $49.00. This is charged by the platform admin. Do you agree to pay this fee?')) {
+    if (!confirm('Publishing requires a one-time listing commission fee of NPR 5000. This is charged by the platform admin. Do you agree to pay this fee?')) {
       return;
     }
 

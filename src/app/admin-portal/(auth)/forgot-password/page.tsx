@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
             <ShieldAlert className="h-8 w-8" />
           </div>
           <h1 className="text-2xl font-bold text-center">Reset Password</h1>
-          <p className="text-sm text-slate-500 mt-2 text-center">Enter your work email and we'll send you a link to reset your password.</p>
+          <p className="text-sm text-slate-500 mt-2 text-center">Enter your work email and we&apos;ll send you a link to reset your password.</p>
         </div>
         
         {isSubmitted ? (

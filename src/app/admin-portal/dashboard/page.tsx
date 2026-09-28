@@ -83,7 +83,7 @@ import { redirect } from 'next/navigation';
 export default async function AdminDashboardPage() {
   const session = await auth();
   const user = session?.user as any;
-  if (!user || user.role !== 'ADMIN') redirect('/login');
+  if (!user || (user.role !== 'ADMIN' && !user.adminRole)) redirect('/login');
   
   if (user.adminRole === 'BOOKING_ADMIN') redirect('/admin-portal/bookings');
   if (user.adminRole === 'LISTING_ADMIN') redirect('/admin-portal/listings');
@@ -169,7 +169,7 @@ export default async function AdminDashboardPage() {
 
   // Aggregate breakdown counts for each required status
   const breakdownStatuses = [
-    'PENDING_PAYMENT',
+    'PAYMENT_PENDING',
     'CONFIRMED',
     'COMPLETED',
     'CANCELLED',

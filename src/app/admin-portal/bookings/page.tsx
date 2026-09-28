@@ -23,7 +23,7 @@ export const metadata = {
 
 function getStatusBadge(status: string) {
   switch (status) {
-    case 'PENDING_PAYMENT':
+    case 'PAYMENT_PENDING':
       return (
         <Badge className="bg-orange-100 text-orange-800 border-orange-200 hover:bg-orange-100 font-medium">
           Pending Payment
@@ -131,7 +131,7 @@ export default async function AdminBookingsPage({ searchParams }: { searchParams
   });
 
   const totalCount = bookings.length;
-  const pendingCount = bookings.filter((b) => b.bookingStatus === 'PENDING_PAYMENT').length;
+  const pendingCount = bookings.filter((b) => b.bookingStatus === 'PAYMENT_PENDING').length;
   const confirmedCount = bookings.filter((b) => b.bookingStatus === 'CONFIRMED').length;
   const completedCount = bookings.filter((b) => b.bookingStatus === 'COMPLETED').length;
   const cancelledCount = bookings.filter((b) => b.bookingStatus === 'CANCELLED').length;

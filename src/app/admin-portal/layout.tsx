@@ -25,7 +25,7 @@ export default async function AdminPortalLayout({
     }
   }
 
-  const isSuperAdmin = user?.adminRole === 'SUPER_ADMIN';
+  const isSuperAdmin = user?.adminRole === 'SUPER_ADMIN' || user?.role === 'ADMIN';
   const canViewBookings = hasPermission(user, PERMISSIONS.BOOKINGS_VIEW);
   const canViewListings = hasPermission(user, PERMISSIONS.LISTINGS_VIEW);
   const canViewFinance = hasPermission(user, PERMISSIONS.PAYMENTS_VIEW);

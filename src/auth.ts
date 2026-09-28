@@ -7,6 +7,20 @@ import { prisma } from '@/lib/prisma';
 import { authConfig } from './auth.config';
 import { loginSchema } from '@/lib/validators/auth';
 
+
+const rateLimitStore = new Map();
+function isRateLimited(email: string) {
+  const now = Date.now();
+  let entry = rateLimitStore.get(email);
+  if (!entry || entry.resetAt <= now) {
+    rateLimitStore.set(email, { count: 1, resetAt: now + 15 * 60000 });
+    return false;
+  }
+  entry.count++;
+  if (entry.count > 10) return true;
+  return false;
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
@@ -19,6 +33,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
+        if (typeof credentials?.email === 'string' && isRateLimited(credentials.email)) throw new Error('Too many login attempts');
         const validated = loginSchema.safeParse(credentials);
         if (!validated.success) return null;
 

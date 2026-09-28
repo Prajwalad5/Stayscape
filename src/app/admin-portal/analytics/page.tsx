@@ -28,11 +28,11 @@ export default async function AnalyticsPage() {
     prisma.booking.count({ where: { deletedAt: null } }),
     prisma.review.aggregate({ _avg: { overallRating: true } }),
     Promise.all([
-      prisma.booking.count({ where: { bookingStatus: 'PENDING_PAYMENT', deletedAt: null } }),
+      prisma.booking.count({ where: { bookingStatus: 'PAYMENT_PENDING', deletedAt: null } }),
       prisma.booking.count({ where: { bookingStatus: 'CONFIRMED', deletedAt: null } }),
       prisma.booking.count({ where: { bookingStatus: 'COMPLETED', deletedAt: null } }),
       prisma.booking.count({ where: { bookingStatus: 'CANCELLED', deletedAt: null } }),
-      prisma.booking.count({ where: { bookingStatus: 'REFUNDED', deletedAt: null } }),
+      prisma.booking.count({ where: { paymentStatus: 'REFUNDED', deletedAt: null } }),
     ]),
     prisma.user.count({ where: { createdAt: { gte: sevenDaysAgo }, deletedAt: null } }),
     prisma.user.count({ where: { createdAt: { gte: thirtyDaysAgo }, deletedAt: null } }),
@@ -220,3 +220,4 @@ export default async function AnalyticsPage() {
     </div>
   );
 }
+

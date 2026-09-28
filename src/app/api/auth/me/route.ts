@@ -64,7 +64,17 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    let body;
+
+    try {
+
+      body = await request.json();
+
+    } catch (e) {
+
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+
+    }
     const userId = (session.user as any).id;
 
     // Allowed fields to update

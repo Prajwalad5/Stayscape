@@ -26,10 +26,11 @@ export function SearchBar() {
     <div className="rounded-2xl border bg-background p-2 shadow-lg md:flex md:items-center">
       {/* Location */}
       <div className="flex-1 border-b md:border-b-0 md:border-r px-3 py-2">
-        <label className="block text-xs font-semibold text-foreground">Where</label>
+        <label htmlFor="search-where" className="block text-xs font-semibold text-foreground">Where</label>
         <div className="flex items-center gap-2">
           <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
           <Input
+            id="search-where"
             type="text"
             placeholder="Search destinations"
             value={location}
@@ -41,10 +42,11 @@ export function SearchBar() {
 
       {/* Check-in */}
       <div className="flex-1 border-b md:border-b-0 md:border-r px-3 py-2">
-        <label className="block text-xs font-semibold text-foreground">Check in</label>
+        <label htmlFor="search-checkin" className="block text-xs font-semibold text-foreground">Check in</label>
         <div className="flex items-center gap-2">
           <CalendarDays className="h-4 w-4 text-muted-foreground shrink-0" />
           <Input
+            id="search-checkin"
             type="date"
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
@@ -56,10 +58,11 @@ export function SearchBar() {
 
       {/* Check-out */}
       <div className="flex-1 border-b md:border-b-0 md:border-r px-3 py-2">
-        <label className="block text-xs font-semibold text-foreground">Check out</label>
+        <label htmlFor="search-checkout" className="block text-xs font-semibold text-foreground">Check out</label>
         <div className="flex items-center gap-2">
           <CalendarDays className="h-4 w-4 text-muted-foreground shrink-0" />
           <Input
+            id="search-checkout"
             type="date"
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
@@ -71,10 +74,11 @@ export function SearchBar() {
 
       {/* Guests */}
       <div className="flex-1 px-3 py-2">
-        <label className="block text-xs font-semibold text-foreground">Guests</label>
+        <label htmlFor="search-guests" className="block text-xs font-semibold text-foreground">Guests</label>
         <div className="flex items-center gap-2">
           <Users className="h-4 w-4 text-muted-foreground shrink-0" />
           <Input
+            id="search-guests"
             type="number"
             placeholder="Add guests"
             value={guests}

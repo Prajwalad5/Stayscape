@@ -1,6 +1,8 @@
+import { sanitizeHtml } from '@/lib/security';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
+
 
 export async function GET(
   request: NextRequest,
@@ -91,8 +93,14 @@ export async function POST(
       );
     }
     const userId = (session.user as any).id;
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (e) {
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+    }
     const { content, messageType, attachmentUrl } = body;
+      const safeContent = sanitizeHtml(content);
 
     const conversation = await prisma.conversation.findUnique({
       where: { id: params.id },
@@ -116,7 +124,7 @@ export async function POST(
 
     const message = await prisma.message.create({
       data: {
-        content,
+        content: safeContent,
         messageType: messageType || 'text',
         attachmentUrl,
         conversationId: params.id,

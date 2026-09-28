@@ -78,7 +78,17 @@ export async function POST(request: NextRequest) {
     }
     const userId = (session.user as any).id;
 
-    const body = await request.json();
+    let body;
+
+    try {
+
+      body = await request.json();
+
+    } catch (e) {
+
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+
+    }
     const validated = bookingSchema.safeParse(body);
     if (!validated.success) {
       return NextResponse.json(
@@ -137,7 +147,7 @@ export async function POST(request: NextRequest) {
     const overlapping = await prisma.booking.findFirst({
       where: {
         propertyId: listingId,
-        bookingStatus: { in: ['PENDING_PAYMENT', 'CONFIRMED'] },
+        bookingStatus: { in: ['PAYMENT_PENDING', 'CONFIRMED'] },
         AND: [
           { checkIn: { lt: checkOutDate } },
           { checkOut: { gt: checkInDate } }
@@ -208,7 +218,7 @@ export async function POST(request: NextRequest) {
           guestCount: adults + children,
           adults, children, infants, pets,
           specialRequests,
-          bookingStatus: 'PENDING_PAYMENT',
+          bookingStatus: 'PAYMENT_PENDING',
           expiresAt,
           nightlyRate, subtotal, cleaningFee, serviceFee, taxAmount: tax, discount, totalPrice: total, hostPayoutAmount: hostPayout,
           
@@ -227,7 +237,7 @@ export async function POST(request: NextRequest) {
             ]
           },
           statusHistory: {
-            create: { status: 'PENDING_PAYMENT', changedBy: 'GUEST', note: 'Initial rental creation' }
+            create: { status: 'PAYMENT_PENDING', changedBy: 'GUEST', note: 'Initial rental creation' }
           }
         },
         include: { property: true, guest: { select: { name: true } } }

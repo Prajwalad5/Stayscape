@@ -38,7 +38,7 @@ console.log("AUTHORIZED CHECK: user=", JSON.stringify(user));
 
       // Legacy admin routes (redirect to new portal in the future, for now protect them)
       if (pathname.startsWith('/admin')) {
-        return isLoggedIn && user?.role === 'ADMIN';
+        return isLoggedIn && (user?.role === 'ADMIN' || !!user?.adminRole);
       }
 
       // Host routes
@@ -65,6 +65,8 @@ console.log("AUTHORIZED CHECK: user=", JSON.stringify(user));
         token.permissions = (user as any).permissions;
       }
       if (trigger === 'update' && session) {
+        if (session.name) token.name = session.name;
+        if (session.image) token.picture = session.image;
         token.role = session.role;
         token.isHost = session.isHost;
         if (session.adminRole !== undefined) token.adminRole = session.adminRole;
@@ -79,6 +81,8 @@ console.log("AUTHORIZED CHECK: user=", JSON.stringify(user));
         (session.user as any).isHost = token.isHost;
         (session.user as any).adminRole = token.adminRole;
         (session.user as any).permissions = token.permissions;
+        if (token.name) (session.user as any).name = token.name;
+        if (token.picture) (session.user as any).image = token.picture;
       }
       return session;
     },

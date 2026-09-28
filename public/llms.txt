@@ -1,0 +1,19 @@
+# StayScape - Rental Marketplace
+
+StayScape is a modern accommodation and rental marketplace platform built with Next.js 14, React, Tailwind CSS, and Prisma (SQLite/PostgreSQL).
+
+## Features
+- Guest, Host, and Admin roles
+- Property listings, booking engine, and payments (Stripe)
+- Messaging system, Wishlists, Reviews, and Support Tickets
+- Robust RBAC security and moderation tools
+
+## Legal & Compliance
+- Data is heavily minimized.
+- Legal documents (Privacy Policy, Terms of Service, etc.) are available on the site.
+- Built-in cookie consent banner.
+
+## Tech Stack
+- Frontend: Next.js App Router, React, Tailwind CSS, shadcn/ui, Lucide React
+- Backend: Next.js API Routes, Prisma ORM, NextAuth (Auth.js) v5
+- Database: SQLite (dev) / PostgreSQL (prod)

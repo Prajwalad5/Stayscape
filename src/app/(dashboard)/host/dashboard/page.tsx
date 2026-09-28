@@ -43,7 +43,7 @@ async function getHostStats(hostId: string) {
 
 async function getRecentBookings(hostId: string) {
   return prisma.booking.findMany({
-    where: { property: { hostId }, bookingStatus: { in: ['PENDING', 'CONFIRMED'] } },
+    where: { property: { hostId }, bookingStatus: { in: ['PAYMENT_PENDING', 'REQUESTED', 'PENDING_APPROVAL', 'CONFIRMED'] } },
     include: {
       property: { select: { id: true, title: true } },
       guest: { select: { id: true, name: true, image: true } },

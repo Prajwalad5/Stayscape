@@ -13,7 +13,17 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = await request.json();
+    let body;
+
+    try {
+
+      body = await request.json();
+
+    } catch (e) {
+
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+
+    }
     const { providerPaymentId, transactionId, metadata } = body;
 
     if (!providerPaymentId) {
@@ -49,7 +59,7 @@ export async function POST(request: Request) {
       const updatedPayment = await tx.payment.update({
         where: { id: payment.id },
         data: {
-          status: verificationResult.status,
+          status: verificationResult.status as any,
           verifiedAt: verificationResult.verified ? new Date() : null,
           metadata: metadata ? metadata as any : undefined
         }
@@ -120,3 +130,4 @@ export async function POST(request: Request) {
     );
   }
 }
+

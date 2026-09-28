@@ -20,5 +20,5 @@ export function useIsHost() {
 
 export function useIsAdmin() {
   const { user } = useCurrentUser();
-  return user?.role === 'ADMIN';
+  return user?.role === 'ADMIN' || !!user?.adminRole;
 }

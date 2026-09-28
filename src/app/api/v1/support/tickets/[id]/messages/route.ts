@@ -36,7 +36,17 @@ export async function POST(
       );
     }
 
-    const body = await request.json();
+    let body;
+
+    try {
+
+      body = await request.json();
+
+    } catch (e) {
+
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+
+    }
     const { message, attachmentUrl } = body;
 
     const supportMessage = await prisma.supportMessage.create({

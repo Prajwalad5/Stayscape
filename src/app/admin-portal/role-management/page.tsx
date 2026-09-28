@@ -37,7 +37,7 @@ export default async function RoleManagementPage({ searchParams }: { searchParam
     select: { id: true, role: true, adminRole: true },
   });
 
-  if (!freshUser || freshUser.role !== 'ADMIN') {
+  if (!freshUser || (freshUser.role !== 'ADMIN' && !freshUser.adminRole)) {
     redirect('/login');
   }
 

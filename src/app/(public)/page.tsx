@@ -1,3 +1,4 @@
+import { HomepageMap } from '@/components/map/homepage-map';
 import Link from 'next/link';
 import { Search, Star, Shield, Heart, MapPin, Users, Calendar, ChevronRight, Home, Building2, TreePine, Castle, Waves, Sparkles, Mountain, Tent } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { prisma } from '@/lib/prisma';
 import { PropertyCard } from '@/components/property/property-card';
 import { SearchBar } from '@/components/search/search-bar';
+import { APIProvider } from '@vis.gl/react-google-maps';
 import { formatPrice } from '@/lib/utils';
 import { PROPERTY_TYPES, FEATURED_DESTINATIONS } from '@/lib/constants';
 

@@ -14,7 +14,12 @@ export async function POST(request: Request) {
     }
 
     const userId = (session.user as any).id;
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (e) {
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+    }
     
     const { 
       bookingId,
@@ -35,7 +40,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Forbidden' }, { status: 403 });
     }
 
-    if (booking.bookingStatus !== 'PENDING_PAYMENT') {
+    if (booking.bookingStatus !== 'PAYMENT_PENDING') {
       return NextResponse.json({ success: false, error: 'Booking is not pending payment' }, { status: 400 });
     }
 
@@ -81,7 +86,7 @@ export async function POST(request: Request) {
         paymentMethod: paymentMethodId,
         amount: booking.totalPrice,
         currency: property.currency,
-        status: intentResult.status,
+        status: intentResult.status as any,
         platformFeeAmount: booking.serviceFee,
         hostPayoutAmount: booking.hostPayoutAmount,
         processingFee: processingFee,
@@ -112,3 +117,4 @@ export async function POST(request: Request) {
     );
   }
 }
+

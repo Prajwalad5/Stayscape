@@ -16,7 +16,12 @@ export async function POST(request: Request) {
     }
 
     const userId = (session.user as any).id;
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (e) {
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+    }
     const validated = createBookingSchema.safeParse(body);
 
     if (!validated.success) {
@@ -46,7 +51,7 @@ export async function POST(request: Request) {
         where: {
           propertyId,
           guestId: userId,
-          bookingStatus: { in: ['PENDING', 'PENDING_APPROVAL', 'REQUESTED'] },
+          bookingStatus: { in: ['PAYMENT_PENDING', 'PENDING_APPROVAL', 'REQUESTED'] },
         }
       });
       
@@ -248,7 +253,7 @@ export async function POST(request: Request) {
           // Rental Fields
           rentalType,
           securityDepositAmount: securityDeposit,
-          securityDepositStatus: securityDeposit > 0 ? 'PENDING' : null,
+          securityDepositStatus: securityDeposit > 0 ? 'PAYMENT_PENDING' : null,
           durationMonths: rentalType === 'MONTHLY' ? duration : null,
 
           isDemo: false,
@@ -383,3 +388,4 @@ export async function GET(request: Request) {
     );
   }
 }
+

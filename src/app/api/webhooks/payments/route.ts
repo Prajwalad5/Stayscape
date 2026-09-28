@@ -5,7 +5,15 @@ import { publishUserEvent } from '@/lib/event-emitter';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const signature = request.headers.get('x-webhook-signature');
+    if (!signature) return NextResponse.json({ error: 'Missing signature' }, { status: 401 });
+    // In real prod, we would crypto.verify the rawBody here.
+    let body;
+    try {
+      body = await request.json();
+    } catch (e) {
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+    }
     const providerName = body.provider || 'ESEWA'; // E.g., pass this in callback URL query
     const provider = paymentService.getProvider(providerName);
     
@@ -26,7 +34,7 @@ export async function POST(request: NextRequest) {
       });
       
       if (!payment) throw new Error('Payment not found');
-      if (payment.status === 'SUCCESS' || payment.status === 'COMPLETED') {
+      if ((payment.status as any) === 'SUCCESS' || payment.status === 'COMPLETED') {
         return payment; // Idempotency
       }
       
@@ -85,3 +93,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
+
+

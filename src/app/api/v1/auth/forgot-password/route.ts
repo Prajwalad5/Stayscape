@@ -6,9 +6,19 @@ const forgotPasswordSchema = z.object({
   email: z.string().email('Invalid email address')
 });
 
+import { rateLimit, rateLimitResponse } from '@/lib/security';
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const ip = request.ip || request.headers.get('x-forwarded-for') || '127.0.0.1';
+    const rl = rateLimit('forgot_' + ip, 3, 15 * 60 * 1000);
+    if (!rl.allowed) return rateLimitResponse(rl.resetAt);
+    let body;
+    try {
+      body = await request.json();
+    } catch (e) {
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+    }
     const validated = forgotPasswordSchema.safeParse(body);
     
     if (!validated.success) {
@@ -48,3 +58,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

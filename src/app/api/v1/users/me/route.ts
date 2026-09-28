@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(request: NextRequest) {
   try {
@@ -84,7 +85,12 @@ export async function PATCH(request: NextRequest) {
     }
     
     const userId = (session.user as any).id;
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (e) {
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+    }
     const validated = updateProfileSchema.safeParse(body);
     
     if (!validated.success) {
@@ -153,6 +159,7 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
+    revalidatePath('/', 'layout');
     return NextResponse.json({ success: true, data: { message: 'Profile updated successfully' } });
   } catch (error) {
     console.error('UsersMeRoute PATCH error:', error);

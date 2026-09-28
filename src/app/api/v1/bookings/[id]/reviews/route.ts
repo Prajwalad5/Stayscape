@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
+import { sanitizeHtml } from '@/lib/security';
 import { z } from 'zod';
 
 const reviewSchema = z.object({
@@ -31,7 +32,17 @@ export async function POST(
     }
     const userId = (session.user as any).id;
 
-    const body = await request.json();
+    let body;
+
+    try {
+
+      body = await request.json();
+
+    } catch (e) {
+
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+
+    }
     const validated = reviewSchema.safeParse(body);
     if (!validated.success) {
       return NextResponse.json(

@@ -8,7 +8,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     const session = await auth();
     const sessionUser = session?.user as any;
 
-    if (!sessionUser || sessionUser.role !== 'ADMIN') {
+    if (!sessionUser || (sessionUser.role !== 'ADMIN' && !sessionUser.adminRole)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -24,7 +24,12 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     const user = freshUser;
 
     const targetId = params.id;
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (e) {
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+    }
     
     // Validate target exists
     const target = await prisma.user.findUnique({ where: { id: targetId } });

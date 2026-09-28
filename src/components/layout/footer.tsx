@@ -69,7 +69,7 @@ export function Footer() {
             <button className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
               <Globe className="h-4 w-4" /> English (US)
             </button>
-            <span className="text-sm text-muted-foreground">$ USD</span>
+            <span className="text-sm text-muted-foreground">NPR</span>
             <div className="flex items-center gap-3">
               <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
                 <Facebook className="h-4 w-4" />

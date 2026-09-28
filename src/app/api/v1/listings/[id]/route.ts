@@ -29,7 +29,7 @@ export async function GET(
 ) {
   try {
     const listing = await prisma.property.findUnique({
-      where: { id: params.id, status: { not: 'ARCHIVED' } },
+      where: { id: params.id, status: { not: 'ARCHIVED' as any } },
       include: {
         images: { orderBy: { sortOrder: 'asc' } },
         amenities: true,
@@ -99,7 +99,17 @@ export async function PATCH(
       );
     }
 
-    const body = await request.json();
+    let body;
+
+    try {
+
+      body = await request.json();
+
+    } catch (e) {
+
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+
+    }
     const validated = updateListingSchema.safeParse(body);
     if (!validated.success) {
       return NextResponse.json(
@@ -182,7 +192,7 @@ export async function DELETE(
     await prisma.property.update({
       where: { id: params.id },
       data: {
-        status: 'ARCHIVED',
+        status: 'ARCHIVED' as any,
         deletedAt: new Date()
       }
     });
@@ -196,3 +206,4 @@ export async function DELETE(
     );
   }
 }
+

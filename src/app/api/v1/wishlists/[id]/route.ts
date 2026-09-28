@@ -68,7 +68,12 @@ export async function PATCH(
       );
     }
     const userId = (session.user as any).id;
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (e) {
+      return NextResponse.json({ success: false, error: { code: 'INVALID_JSON', message: 'Malformed JSON body' } }, { status: 400 });
+    }
     const { name } = body;
 
     const wishlist = await prisma.wishlist.findUnique({

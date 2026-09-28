@@ -30,7 +30,10 @@ export default async function TripsPage() {
     orderBy: { createdAt: 'desc' },
   });
 
-  const upcoming = bookings.filter(b => ['CONFIRMED', 'PENDING', 'PENDING_PAYMENT'].includes(b.bookingStatus) && new Date(b.checkIn || b.startDate || new Date()) >= new Date());
+  
+  const requested = bookings.filter((b) => ['PENDING', 'REQUESTED', 'PENDING_APPROVAL'].includes(b.bookingStatus));
+  const upcoming = bookings.filter((b) => ['APPROVED', 'PAYMENT_PENDING', 'PAYMENT_SUCCESS', 'CONFIRMED'].includes(b.bookingStatus) && new Date(b.checkIn || b.createdAt) >= new Date());
+
   const past = bookings.filter(b => ['COMPLETED'].includes(b.bookingStatus));
   const cancelled = bookings.filter(b => ['CANCELLED', 'REFUNDED'].includes(b.bookingStatus));
 
@@ -50,15 +53,18 @@ export default async function TripsPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">My Rentals</h1>
-      <Tabs defaultValue="upcoming">
+      <Tabs defaultValue="requested">
         <TabsList>
           <TabsTrigger value="upcoming">Upcoming ({upcoming.length})</TabsTrigger>
           <TabsTrigger value="past">Past ({past.length})</TabsTrigger>
           <TabsTrigger value="cancelled">Cancelled ({cancelled.length})</TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="requested" className="mt-4">{renderTrips(requested)}</TabsContent>
         <TabsContent value="upcoming" className="mt-4">{renderTrips(upcoming)}</TabsContent>
         <TabsContent value="past" className="mt-4">{renderTrips(past)}</TabsContent>
         <TabsContent value="cancelled" className="mt-4">{renderTrips(cancelled)}</TabsContent>
+
       </Tabs>
     </div>
   );

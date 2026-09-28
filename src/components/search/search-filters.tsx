@@ -70,7 +70,7 @@ export function SearchFilters() {
           className="mt-2"
         />
         <div className="flex items-center justify-between text-sm">
-          <span>${priceRange[0]}</span>
+          <span>NPR ${priceRange[0]}</span>
           <span>${priceRange[1]}+</span>
         </div>
         <Button variant="outline" size="sm" onClick={applyPriceFilter} className="w-full">

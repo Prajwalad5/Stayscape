@@ -32,7 +32,7 @@ export default async function AdminFinancePage({ searchParams }: { searchParams:
   });
 
   const totalRevenue = await prisma.payment.aggregate({
-    where: { status: 'COMPLETED' },
+    where: { status: 'SUCCEEDED' },
     _sum: { platformFeeAmount: true, amount: true }
   });
 
@@ -101,3 +101,4 @@ export default async function AdminFinancePage({ searchParams }: { searchParams:
     </div>
   );
 }
+
