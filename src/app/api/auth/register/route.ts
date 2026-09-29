@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { hashEmailForSearch, encryptProfileData } from '@/lib/crypto';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
