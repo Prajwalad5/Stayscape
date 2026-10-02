@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { HomepageMap } from '@/components/map/homepage-map';
 import Link from 'next/link';
 import { Search, Star, Shield, Heart, MapPin, Users, Calendar, ChevronRight, Home, Building2, TreePine, Castle, Waves, Sparkles, Mountain, Tent } from 'lucide-react';

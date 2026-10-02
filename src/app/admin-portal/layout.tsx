@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import Link from "next/link"
 import { Users, Building, DollarSign, LayoutDashboard, Settings, Megaphone, LogOut, BookOpen, BarChart3, ShieldAlert } from "lucide-react"
 import { RealTimeListener } from "@/components/admin/real-time-listener"
